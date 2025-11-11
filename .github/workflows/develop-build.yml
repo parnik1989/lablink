@@ -48,6 +48,10 @@ jobs:
           # ensure SPA fallback
           cp "$DIST/browser/index.html" "$DIST/browser/404.html"
           echo "Copied index.html -> 404.html"
+
+          # Add .nojekyll to prevent GitHub Pages from processing the files
+          touch "$DIST/browser/.nojekyll"
+          echo "Created .nojekyll file"
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v4
 
