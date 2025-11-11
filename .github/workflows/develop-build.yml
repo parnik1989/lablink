@@ -12,6 +12,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest # Specify the operating system for the runner
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout Code
@@ -54,4 +57,5 @@ jobs:
           path: ./dist/lablink/browser
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
