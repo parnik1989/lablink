@@ -1,0 +1,65 @@
+name: Develop Build
+
+on:
+  push:
+    branches:
+      - develop # Trigger on pushes to the develop branch
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Specify the operating system for the runner
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4 # Action to check out your repository code
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0' # Specify the Node.js version
+
+      - name: Install Dependencies
+        run: npm install 
+
+      - name: Build Angular (production) and set base-href to repo name
+        # adjust the output folder name below if your angular.json uses a different outputPath
+        run: |
+          REPO_NAME="lablink"
+          echo "Building with base-href=/$REPO_NAME/"
+          npm run build -- --configuration production --base-href="/${REPO_NAME}/"
+      - name: Locate dist and prepare SPA fallback + debug
+        run: |
+          # detect correct dist folder (Angular v15+ with Universal may have /browser)
+          if [ -d "dist/lablink" ]; then
+            DIST="dist/lablink"
+          else
+            echo "ERR: dist folder not found"
+            ls -la dist || true
+            exit 1
+          fi
+          
+          # ensure SPA fallback
+          cp "$DIST/browser/index.html" "$DIST/browser/404.html"
+          echo "Copied index.html -> 404.html"
+
+          # Add .nojekyll to prevent GitHub Pages from processing the files
+          touch "$DIST/browser/.nojekyll"
+          echo "Created .nojekyll file"
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist/lablink/browser
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

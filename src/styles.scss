@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+/* Basic theme + responsive tweaks for the coming soon page */
+
+:root{
+  --primary: #0d6efd;
+  --muted: #6c757d;
+  --card-radius: 16px;
+  --gradient-start: #f8fafc;
+  --gradient-end: #e9f0ff;
+}
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+}
+
+/* Card styling */
+.card{
+  border-radius: var(--card-radius);
+  overflow: hidden;
+}
+
+/* Logo circle */
+.logo-circle{
+  width:72px;
+  height:72px;
+  border-radius:12px;
+  background: linear-gradient(180deg,var(--primary), #0056d2);
+  box-shadow: 0 6px 18px rgba(13,110,253,0.18);
+}
+
+/* Hero image placeholder (replace with real image or background-image url) */
+.hero-img{
+  background-image: linear-gradient(180deg, rgba(13,110,253,0.06), rgba(13,110,253,0.02));
+  background-size: cover;
+  background-position: center;
+  min-height: 320px;
+}
+
+/* Adjust spacing on smaller screens */
+@media (max-width: 991.98px) {
+  .card { border-radius: 12px; }
+  .logo-circle{ margin-bottom: 12px; }
+}
+
+/* Button focus styles for accessibility */
+.btn:focus{
+  box-shadow: 0 0 0 0.25rem rgba(13,110,253,0.25);
+  outline: none;
+}
